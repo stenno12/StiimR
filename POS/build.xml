@@ -1,22 +1,36 @@
-<project name="POS" basedir="." default="main">
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="POS" default="build">
 
-    <property name="src.dir"     value="src"/>
-    <property name="build.dir"   value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="jar.dir"     value="${build.dir}/jar"/>
+	<!-- Definitions of variables used during the rest of this script -->
+
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="build.classes.dir" value="${build.dir}/classes"/>
+	<property name="src.dir" value="${basedir}/src"/>
+	<property name="dist.dir" value="${basedir}/dist"/>
+	<property name="conf.dir" value="${basedir}/etc"/>
+	<property name="doc.dir" value="${build.dir}/doc"/>
+	<property name="test.reports.dir" value="${build.dir}/reports/"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="jar.dir" value="${build.dir}/jar"/>
 	<property name="main-class" value="ee.ut.math.tvt.stenno.Intro"/>
-    <property name="lib.dir"     value="lib"/>
-	<property file="version.properties"/>
 
-    <path id="classpath">
-        <fileset dir="${lib.dir}" includes="**/*.jar"/>
-    </path>
+	<!-- Definitions of classpath variants used for different tasks -->
 
+	<path id="compile.classpath">
+		<fileset dir="lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
 
-
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
+	<path id="test.classpath">
+		<pathelement location="${build.classes.dir}"/>
+		<!-- configuration -->
+		<pathelement location="${conf.dir}"/>
+		<fileset dir="lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
 	
 	<target name="revision"> 
 		<propertyfile file="version.properties"> 
@@ -24,34 +38,66 @@
 		</propertyfile> 
 	</target>
 
-    <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false"/>
-        <copy todir="${classes.dir}">
-            <fileset dir="${src.dir}" excludes="**/*.java"/>
-        </copy>
-    </target>
+	<!-- Definitions of runnable ant targets.
+         Run them from the command line by executing "ant [targetname]"  -->
 
-    <target name="jar" depends="compile,revision">
+	<target name="run" depends="build" description="Run the template application">
+		<java classname="ee.ut.math.tvt.stenno.Intro" classpathref="test.classpath" fork="yes" />
+	</target>
+	
+	<target name="runc" depends="build" description="Run the application (console)">
+		<java classname="ee.ut.math.tvt.stenno.Intro" classpathref="test.classpath" fork="yes">
+			<arg value="console" />
+		</java>
+	</target>
+
+	<target name="build" description="Build the system">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.classes.dir}"/>
+		<javac
+            srcdir="${src.dir}"
+            destdir="${build.classes.dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            encoding="utf-8"
+            compiler="modern"
+            target="1.7"
+            source="1.7"
+			includeantruntime="false">
+			<classpath refid="compile.classpath"/>
+		</javac>
+
+	</target>
+	
+    <target name="jar" depends="build,revision">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+        <jar destfile="${jar.dir}/${ant.project.name}.jar">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
+            <fileset dir="${build.classes.dir}" includes="**/*.class" />
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
         </jar>
     </target>
 
-    <target name="run" depends="jar">
-        <java fork="true"  classname="${main-class}">
-            <classpath>
-                <path refid="classpath"/>
-                <path location="${jar.dir}/${ant.project.name}.jar"/>
-            </classpath>
-        </java>
-    </target>
-	
-    <target name="clean-build" depends="clean,jar"/>
+	<!-- Build internal documentation -->
+	<target name="javadoc" description="Build internal documentation">
+		<mkdir dir="${doc.dir}"/>
+		<javadoc destdir="${doc.dir}" classpathref="compile.classpath">
+			<fileset dir="${src.dir}" includes="**/*.java"/>
+		</javadoc>
+	</target>
 
-    <target name="main" depends="clean,run"/>
+	<!-- Clean up build system results -->
+	<target name="clean" description="Clean up build system results">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="test">
+		<exec executable="cmd">
+			<arg line="/c start calc.exe" />
+		</exec>
+	</target>
 
 </project>
+

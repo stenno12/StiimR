@@ -15,7 +15,7 @@ public class IntroUI extends JFrame {
 	public void kuvaintro() throws Exception {
 		
 		
-		java.io.File fail = new java.io.File("version.properties"); 
+		java.io.File fail = new java.io.File("C:\\Users\\Stenno\\Desktop\\git\\Stiim\\POS\\version.properties"); 
 		java.util.Scanner sc = new java.util.Scanner(fail);  
 		String[] vn = new String[5];
 		int jark = 0;
@@ -39,9 +39,9 @@ public class IntroUI extends JFrame {
 		
 		sc.close();
 		
-		java.io.File fail2 = new java.io.File("application.properties"); 
+		java.io.File fail2 = new java.io.File("C:\\Users\\Stenno\\Desktop\\git\\Stiim\\POS\\application.properties"); 
 		java.io.PrintWriter pw = new java.io.PrintWriter(fail); 
-		java.io.FileWriter fw = new java.io.FileWriter(fail2); 
+		java.io.FileWriter fw = new java.io.FileWriter(fail2);
 		
 		pw.println(vn2[0]);
 		pw.println("build.major.number="+vn2[1]);
@@ -67,7 +67,7 @@ public class IntroUI extends JFrame {
 	    JLabel silt4 = new JLabel("null");
 	    JLabel silt5 = new JLabel(vn2[1]+"."+vn2[2]+"."+vn2[3]);
 	    
-	    ImageIcon image = new ImageIcon("steam.jpg");
+	    ImageIcon image = new ImageIcon("C:\\Users\\Stenno\\Desktop\\git\\Stiim\\POS\\steam.jpg");
 	    JLabel imageLabel = new JLabel(image);
 	    
 	    
