@@ -1,0 +1,4 @@
+StiimR
+======
+
+Testprojekt tarkvaratehnika jaoks
