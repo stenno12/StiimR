@@ -93,7 +93,7 @@
 		<delete dir="${build.dir}"/>
 	</target>
 	
-	<target name="test1">
+	<target name="test2">
 		<exec executable="cmd">
 			<arg line="/c start calc.exe" />
 		</exec>
