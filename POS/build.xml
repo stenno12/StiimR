@@ -114,7 +114,6 @@
 			git add -A
 			git commit -m ${commit.comment}
 			git push https://stenno12:${git.password}@github.com/stenno12/StiimR.git
-			pause
 	   	
 	    </echo> 
 		
