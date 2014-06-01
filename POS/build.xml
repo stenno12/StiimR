@@ -93,11 +93,31 @@
 		<delete dir="${build.dir}"/>
 	</target>
 	
-	<target name="test3">
+	
+	<target name="git_commit">
+		<input 
+			message="Commit comment:" 
+			addproperty="commit.comment"
+		/>
+		
+		<input 
+			message="Git password:" 
+			addproperty="git.password"
+		/>
+		
+		<echo file="git_commitb.bat">
+			cd C:\Users\Stenno\Desktop\git\Stiim
+			git add -A
+			git commit -m ${commit.comment}
+			git push https://stenno12:${git.password}@github.com/stenno12/StiimR.git
+	   	
+	    </echo> 
+		
 		<exec executable="cmd">
-			<arg line="/c start calc.exe" />
+			<arg line="/c start ${basedir}/git_commitb.bat"  />
 		</exec>
 	</target>
+	
 
 </project>
 
