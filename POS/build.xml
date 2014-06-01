@@ -105,10 +105,11 @@
 			addproperty="git.password"
 		/>
 		
-		<echo file="git_commitx.bat">
+		<echo file="git_commitb.bat">
 			@echo off
 			setlocal 
-			path=C:\Users\Stenno\AppData\Local\GitHub\PortableGit_054f2e797ebafd44a30203088cd3d58663c627ef\bin;%path% 
+			path=C:\Users\Stenno\AppData\Local\GitHub\PortableGit_054f2e797ebafd44a30203088cd3d58663c627ef\bin;
+			path=C:\Users\Stenno\AppData\Local\GitHub\PortableGit_054f2e797ebafd44a30203088cd3d58663c627ef\cmd;%path% 
 			cd C:\Users\Stenno\Desktop\git\Stiim
 			@echo on
 			git add -A
