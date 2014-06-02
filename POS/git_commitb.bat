@@ -5,7 +5,7 @@
 			cd C:\Users\Stenno\Desktop\git\Stiim
 			@echo on
 			git add -A
-			git commit -m dfd
+			git commit -m testf
 			git push https://stenno12:parool12@github.com/stenno12/StiimR.git
 	   	
 	    
