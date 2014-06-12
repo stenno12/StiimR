@@ -122,6 +122,33 @@
 		</exec>
 	</target>
 	
+	<target name="git_tag">
+			<input 
+				message="Tag name:" 
+				addproperty="tag.name"
+			/>
+			
+			<input 
+				message="Tag comment:" 
+				addproperty="tag.comment"
+			/>
+			
+			<echo file="git_tagb.bat">
+				@echo off
+				setlocal 
+				path=C:\Users\Stenno\AppData\Local\GitHub\PortableGit_054f2e797ebafd44a30203088cd3d58663c627ef\bin;path=C:\Users\Stenno\AppData\Local\GitHub\PortableGit_054f2e797ebafd44a30203088cd3d58663c627ef\cmd;%path% 
+				cd C:\Users\Stenno\Desktop\git\Stiim
+				@echo on
+				git tag -a ${tag.name} -m "${tag.comment}"
+				git push --tags
+		   	
+		    </echo> 
+			
+			<exec executable="cmd">
+				<arg line="/c start ${basedir}/git_tagb.bat"  />
+			</exec>
+		</target>
+	
 
 </project>
 

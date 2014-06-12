@@ -4,6 +4,8 @@ import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.panels.PurchaseItemPanel;
+import ee.ut.math.tvt.salessystem.domain.data.StockItem;
+import ee.ut.math.tvt.salessystem.ui.SaleUI;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -14,7 +16,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.apache.log4j.Logger;
-
 /**
  * Encapsulates everything that has to do with the purchase tab (the tab
  * labelled "Point-of-sale" in the menu).
@@ -31,9 +32,9 @@ public class PurchaseTab {
 
   private JButton cancelPurchase;
 
-  private PurchaseItemPanel purchasePane;
+  public PurchaseItemPanel purchasePane;
 
-  private SalesSystemModel model;
+  public static SalesSystemModel model;
 
 
   public PurchaseTab(SalesDomainController controller,
@@ -151,7 +152,7 @@ public class PurchaseTab {
 
 
   /**  Event handler for the <code>cancel purchase</code> event. */
-  protected void cancelPurchaseButtonClicked() {
+  public void cancelPurchaseButtonClicked() {
     log.info("Sale cancelled");
     try {
       domainController.cancelCurrentPurchase();
@@ -160,7 +161,25 @@ public class PurchaseTab {
     } catch (VerificationFailedException e1) {
       log.error(e1.getMessage());
     }
+    
+    for (int i = 0; i < purchasePane.temp.size(); i++) {
+    	StockItem woop = purchasePane.getStockItemByName2(purchasePane.temp.get(i));
+    	i++;
+    	woop.setQuantity(woop.getQuantity()+Integer.valueOf(purchasePane.temp.get(i)));
+		
+	}
   }
+  
+  public void cancelPurchaseButtonClicked2() {
+	    log.info("Sale cancelled");
+	    try {
+	      domainController.cancelCurrentPurchase();
+	      endSale();
+	      model.getCurrentPurchaseTableModel().clear();
+	    } catch (VerificationFailedException e1) {
+	      log.error(e1.getMessage());
+	    }
+	  }
 
 
   /** Event handler for the <code>submit purchase</code> event. */
@@ -176,6 +195,9 @@ public class PurchaseTab {
     } catch (VerificationFailedException e1) {
       log.error(e1.getMessage());
     }
+    
+    SaleUI asd = new SaleUI();
+    asd.setVisible(true);
   }
 
 
@@ -192,6 +214,7 @@ public class PurchaseTab {
     submitPurchase.setEnabled(true);
     cancelPurchase.setEnabled(true);
     newPurchase.setEnabled(false);
+    purchasePane.fillDialogFields();
   }
 
   // switch UI to the state that allows to initiate new purchase

@@ -1,8 +1,10 @@
 package ee.ut.math.tvt.salessystem.ui.panels;
 
+import ee.ut.math.tvt.salessystem.domain.controller.impl.SalesDomainControllerImpl;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.domain.data.StockItem;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -10,11 +12,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,13 +37,18 @@ public class PurchaseItemPanel extends JPanel {
     // Text field on the dialogPane
     private JTextField barCodeField;
     private JTextField quantityField;
-    private JTextField nameField;
+    private JComboBox nameField;
     private JTextField priceField;
+    public static double kSum;
+    
+    SalesDomainControllerImpl x = new SalesDomainControllerImpl();
+    List<StockItem> c = x.loadWarehouseState();
+    String[] petStrings = new String[c.size()];
 
     private JButton addItemButton;
 
     // Warehouse model
-    private SalesSystemModel model;
+    public SalesSystemModel model;
 
     /**
      * Constructs new purchase item panel.
@@ -75,6 +87,12 @@ public class PurchaseItemPanel extends JPanel {
 
     // purchase dialog
     private JComponent drawDialogPane() {
+    	
+    	
+    	
+    	for (int i = 0; i < c.size(); i++) {
+			petStrings[i] = c.get(i).getName();
+		}
 
         // Create the panel
         JPanel panel = new JPanel();
@@ -84,20 +102,29 @@ public class PurchaseItemPanel extends JPanel {
         // Initialize the textfields
         barCodeField = new JTextField();
         quantityField = new JTextField("1");
-        nameField = new JTextField();
+        nameField = new JComboBox(petStrings);
         priceField = new JTextField();
 
         // Fill the dialog fields if the bar code text field loses focus
-        barCodeField.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-            }
-
-            public void focusLost(FocusEvent e) {
-                fillDialogFields();
-            }
+//        barCodeField.addFocusListener(new FocusListener() {
+//            public void focusGained(FocusEvent e) {
+//            }
+//
+//            public void focusLost(FocusEvent e) {
+//                fillDialogFields();
+//            }
+//        });
+        
+        fillDialogFields();
+        
+        nameField.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fillDialogFields();
+        	}
         });
+        
+        barCodeField.setEditable(false);
 
-        nameField.setEditable(false);
         priceField.setEditable(false);
 
         // == Add components to the panel
@@ -133,12 +160,12 @@ public class PurchaseItemPanel extends JPanel {
 
     // Fill dialog with data from the "database".
     public void fillDialogFields() {
-        StockItem stockItem = getStockItemByBarcode();
+        StockItem stockItem = getStockItemByName();
 
         if (stockItem != null) {
-            nameField.setText(stockItem.getName());
             String priceString = String.valueOf(stockItem.getPrice());
             priceField.setText(priceString);
+            barCodeField.setText(stockItem.getId().toString());
         } else {
             reset();
         }
@@ -156,22 +183,60 @@ public class PurchaseItemPanel extends JPanel {
             return null;
         }
     }
-
+    
+    public StockItem getStockItemByName() {
+    	try {
+    		String petName = (String)nameField.getSelectedItem();
+    		return model.getWarehouseTableModel().getItemByName(petName);
+    	} catch (NumberFormatException ez) {
+    		return null;
+    	} catch (NoSuchElementException ez) {
+    		return null;
+    	}
+    }
+    
+    public StockItem getStockItemByName2(String name) {
+    	try {
+    		return model.getWarehouseTableModel().getItemByName(name);
+    	} catch (NumberFormatException ez) {
+    		return null;
+    	} catch (NoSuchElementException ez) {
+    		return null;
+    	}
+    }
+    public ArrayList<String> temp = new ArrayList<String>();
+    public int tempv = 0;
     /**
      * Add new item to the cart.
      */
     public void addItemEventHandler() {
         // add chosen item to the shopping cart.
-        StockItem stockItem = getStockItemByBarcode();
+        StockItem stockItem = getStockItemByName();
         if (stockItem != null) {
             int quantity;
+            
             try {
                 quantity = Integer.parseInt(quantityField.getText());
+                
             } catch (NumberFormatException ex) {
                 quantity = 1;
             }
-            model.getCurrentPurchaseTableModel()
-                .addItem(new SoldItem(stockItem, quantity));
+            
+            if (quantity > stockItem.getQuantity()) {
+            	JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+			}
+            else{
+            	SoldItem a = new SoldItem(stockItem,quantity);
+            	model.getCurrentPurchaseTableModel()
+                .addItem(a);
+            	kSum = kSum + a.getSum();
+            	stockItem.setQuantity(stockItem.getQuantity() - quantity);
+            }
+            
+            temp.add(stockItem.getName());
+            temp.add(String.valueOf(quantity));
+            
+            
         }
     }
 
@@ -191,7 +256,6 @@ public class PurchaseItemPanel extends JPanel {
     public void reset() {
         barCodeField.setText("");
         quantityField.setText("1");
-        nameField.setText("");
         priceField.setText("");
     }
 

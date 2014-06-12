@@ -13,6 +13,8 @@ import ee.ut.math.tvt.salessystem.domain.data.StockItem;
  */
 public class SalesDomainControllerImpl implements SalesDomainController {
 	
+	
+	
 	public void submitCurrentPurchase(List<SoldItem> goods) throws VerificationFailedException {
 		// Let's assume we have checked and found out that the buyer is underaged and
 		// cannot buy chupa-chups
@@ -37,6 +39,8 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		StockItem chupaChups = new StockItem(2l, "Chupa-chups", "Sweets", 8.0, 8);
 	    StockItem frankfurters = new StockItem(3l, "Frankfurters", "Beer sauseges", 15.0, 12);
 	    StockItem beer = new StockItem(4l, "Free Beer", "Student's delight", 0.0, 100);
+	    
+	    
 
 		dataset.add(chips);
 		dataset.add(chupaChups);

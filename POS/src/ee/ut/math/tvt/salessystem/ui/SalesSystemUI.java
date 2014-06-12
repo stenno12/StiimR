@@ -34,6 +34,8 @@ public class SalesSystemUI extends JFrame {
   private PurchaseTab purchaseTab;
   private HistoryTab historyTab;
   private StockTab stockTab;
+  
+  
 
   /**
    * Constructs sales system GUI.
