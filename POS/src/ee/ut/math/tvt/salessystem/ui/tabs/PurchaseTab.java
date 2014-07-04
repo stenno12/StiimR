@@ -1,18 +1,23 @@
 package ee.ut.math.tvt.salessystem.ui.tabs;
 
+import ee.ut.math.tvt.salessystem.domain.data.SoldPack;
 import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
+import ee.ut.math.tvt.salessystem.ui.SaleUI;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.panels.PurchaseItemPanel;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -34,6 +39,8 @@ public class PurchaseTab {
   private PurchaseItemPanel purchasePane;
 
   private SalesSystemModel model;
+  
+  private SaleUI aken;
 
 
   public PurchaseTab(SalesDomainController controller,
@@ -108,6 +115,8 @@ public class PurchaseTab {
     b.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         submitPurchaseButtonClicked();
+        aken = new SaleUI(model);
+        aken.setVisible(true);
       }
     });
     b.setEnabled(false);
@@ -154,7 +163,12 @@ public class PurchaseTab {
   protected void cancelPurchaseButtonClicked() {
     log.info("Sale cancelled");
     try {
+
       domainController.cancelCurrentPurchase();
+      for (int i = 0; i < model.getCurrentPurchaseTableModel().getRowCount(); i++) {
+    	  model.getWarehouseTableModel().addItem(model.getCurrentPurchaseTableModel().getTableRows().get(i).getEqualStockItem());
+		
+	}
       endSale();
       model.getCurrentPurchaseTableModel().clear();
     } catch (VerificationFailedException e1) {
@@ -171,6 +185,9 @@ public class PurchaseTab {
       domainController.submitCurrentPurchase(
           model.getCurrentPurchaseTableModel().getTableRows()
       );
+
+      
+      
       endSale();
       model.getCurrentPurchaseTableModel().clear();
     } catch (VerificationFailedException e1) {

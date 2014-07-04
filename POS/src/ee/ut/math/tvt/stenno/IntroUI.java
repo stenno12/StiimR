@@ -12,7 +12,7 @@ public class IntroUI extends JFrame {
 	
 	static Logger logger = Logger.getLogger(IntroUI.class.getName());
 	
-	public void kuvaintro() throws Exception {
+	public IntroUI() throws Exception {
 		
 		
 		java.io.File fail = new java.io.File("C:\\Users\\Stenno\\Desktop\\git\\Stiim\\POS\\version.properties"); 
@@ -84,7 +84,6 @@ public class IntroUI extends JFrame {
 	          System.exit(0);
 	        }
 	    });
-	    setVisible(true);
 	    
 	    logger.info("Intro window opened");
 	    

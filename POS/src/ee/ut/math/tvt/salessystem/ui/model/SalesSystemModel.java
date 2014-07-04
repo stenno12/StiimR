@@ -18,6 +18,8 @@ public class SalesSystemModel {
     private PurchaseInfoTableModel currentPurchaseTableModel;
 
     private final SalesDomainController domainController;
+    
+    private SoldPackTable soldPackTable;
 
     /**
      * Construct application model.
@@ -26,6 +28,7 @@ public class SalesSystemModel {
     public SalesSystemModel(SalesDomainController domainController) {
         this.domainController = domainController;
         
+        soldPackTable = new SoldPackTable();
         warehouseTableModel = new StockTableModel();
         currentPurchaseTableModel = new PurchaseInfoTableModel();
 
@@ -40,6 +43,10 @@ public class SalesSystemModel {
 
     public PurchaseInfoTableModel getCurrentPurchaseTableModel() {
         return currentPurchaseTableModel;
+    }
+    
+    public SoldPackTable getCurrentSoldPackTable() {
+    	return soldPackTable;
     }
     
 }

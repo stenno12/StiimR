@@ -21,8 +21,6 @@ public class Intro {
 
 	public static void main(String[] args) throws Exception {
 		PropertyConfigurator.configure("C:\\Users\\Stenno\\Desktop\\git\\Stiim\\POS\\etc\\log4j.properties");
-		IntroUI uks = new IntroUI();
-		uks.kuvaintro();
 		
 		final SalesDomainController domainController = new SalesDomainControllerImpl();
 

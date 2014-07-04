@@ -1,15 +1,22 @@
 package ee.ut.math.tvt.salessystem.ui.tabs;
 
+import ee.ut.math.tvt.salessystem.ui.AddStockItemPanel;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 
 
@@ -18,6 +25,7 @@ public class StockTab {
   private JButton addItem;
 
   private SalesSystemModel model;
+  JTable table;
 
   public StockTab(SalesSystemModel model) {
     this.model = model;
@@ -59,6 +67,12 @@ public class StockTab {
     gc.weightx = 0;
 
     addItem = new JButton("Add");
+    addItem.addActionListener(new ActionListener() {
+    	public void actionPerformed(ActionEvent e) {
+    		AddStockItemPanel paneel2 = new AddStockItemPanel(model);
+    		paneel2.setVisible(true);
+    	}
+    });
     gc.gridwidth = GridBagConstraints.RELATIVE;
     gc.weightx = 1.0;
     panel.add(addItem, gc);
@@ -71,8 +85,18 @@ public class StockTab {
   // table of the wareshouse stock
   private Component drawStockMainPane() {
     JPanel panel = new JPanel();
+    
+    
 
-    JTable table = new JTable(model.getWarehouseTableModel());
+    table = new JTable(model.getWarehouseTableModel());
+    
+    table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+        public void valueChanged(ListSelectionEvent event) {
+            // do some actions here, for example
+            // print first column value from selected row
+            System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
+        }
+    });
 
     JTableHeader header = table.getTableHeader();
     header.setReorderingAllowed(false);
